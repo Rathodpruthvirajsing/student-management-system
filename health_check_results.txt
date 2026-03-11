@@ -1,0 +1,9 @@
+--- Student Login Health Check ---
+Checking User: PRUTHVIRAJ (pruthvirathod467@gmail.com)
+  - ✓ Found in students table: PRUTHVIRAJ
+Checking User: PRUTHVIRAJ (pruthvirathod468@gmail.com)
+  - ✓ Found in students table: PRUTHVIRAJ
+Checking User: utsav (utsav12@gmail.com)
+  - ✓ Found in students table: utsav
+Checking User: Test Student (student_test@example.com)
+  - ✓ Found in students table: Test Student

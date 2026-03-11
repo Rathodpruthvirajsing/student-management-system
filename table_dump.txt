@@ -1,0 +1,29 @@
+--- users ---
+Field: id | Type: int(11) | Null: NO | Default: NULL
+Field: name | Type: varchar(100) | Null: NO | Default: NULL
+Field: email | Type: varchar(150) | Null: NO | Default: NULL
+Field: password | Type: varchar(255) | Null: NO | Default: NULL
+Field: role | Type: enum('admin','teacher','student') | Null: YES | Default: admin
+Field: created_at | Type: timestamp | Null: NO | Default: current_timestamp()
+
+--- students ---
+Field: id | Type: int(11) | Null: NO | Default: NULL
+Field: enrollment_no | Type: varchar(50) | Null: NO | Default: NULL
+Field: name | Type: varchar(100) | Null: NO | Default: NULL
+Field: email | Type: varchar(150) | Null: YES | Default: NULL
+Field: phone | Type: varchar(15) | Null: YES | Default: NULL
+Field: gender | Type: enum('Male','Female','Other') | Null: YES | Default: NULL
+Field: dob | Type: date | Null: YES | Default: NULL
+Field: address | Type: text | Null: YES | Default: NULL
+Field: photo | Type: varchar(255) | Null: YES | Default: NULL
+Field: course_id | Type: int(11) | Null: YES | Default: NULL
+Field: admission_date | Type: date | Null: YES | Default: NULL
+Field: created_at | Type: timestamp | Null: NO | Default: current_timestamp()
+
+--- courses ---
+Field: id | Type: int(11) | Null: NO | Default: NULL
+Field: course_name | Type: varchar(100) | Null: NO | Default: NULL
+Field: course_code | Type: varchar(50) | Null: NO | Default: NULL
+Field: duration | Type: varchar(50) | Null: YES | Default: NULL
+Field: created_at | Type: timestamp | Null: NO | Default: current_timestamp()
+
