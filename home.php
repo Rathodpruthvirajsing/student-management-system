@@ -2,480 +2,418 @@
 session_start();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System - Home</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>NexGen SMS | Professional Student Management</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Library (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #8b5cf6;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            background-color: var(--dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
-        
-        /* Header with Navigation */
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px 30px;
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
         }
-        
-        .navbar .logo {
-            color: white;
+
+        .logo {
             font-size: 24px;
-            font-weight: 600;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
-        .navbar-right {
+
+        .nav-links {
             display: flex;
-            gap: 15px;
+            gap: 30px;
             align-items: center;
         }
-        
-        .btn-login, .btn-logout {
-            padding: 10px 25px;
-            border: 2px solid white;
-            color: white;
-            background: transparent;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
+
+        .nav-links a {
+            color: var(--text-main);
             text-decoration: none;
-            transition: all 0.3s;
+            font-weight: 500;
+            transition: 0.3s;
+            font-size: 15px;
         }
-        
-        .btn-login:hover {
-            background: white;
-            color: #667eea;
+
+        .nav-links a:hover {
+            color: var(--primary);
         }
-        
-        .btn-logout:hover {
-            background: rgba(255,255,255,0.2);
+
+        .btn-portal {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: 0.3s;
         }
-        
-        .user-info {
-            color: white;
-            font-size: 14px;
+
+        .btn-portal:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
         }
-        
+
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 100px 30px;
-            text-align: center;
-        }
-        
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .hero p {
-            font-size: 20px;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        .hero-buttons {
+            height: 100vh;
             display: flex;
-            gap: 20px;
+            align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
+            text-align: center;
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('assets/images/hero-bg.png');
+            background-size: cover;
+            background-position: center;
+            padding: 0 20px;
+            position: relative;
         }
-        
-        .btn-primary, .btn-secondary {
-            padding: 15px 40px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to top, var(--dark), transparent);
         }
-        
-        .btn-primary {
-            background: white;
-            color: #667eea;
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
         }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+        .hero-content h1 span {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
         }
-        
-        .btn-secondary:hover {
-            background: white;
-            color: #667eea;
+
+        /* Floating Cards Animation */
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
         }
-        
-        /* Features Section */
-        .features {
-            padding: 80px 30px;
-            background: white;
+
+        .float {
+            position: absolute;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            padding: 15px;
+            border-radius: 12px;
+            animation: floatAnim 6s infinite ease-in-out;
         }
-        
+
+        @keyframes floatAnim {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Features */
+        .section-padding {
+            padding: 100px 50px;
+        }
+
         .section-title {
             text-align: center;
-            font-size: 36px;
             margin-bottom: 60px;
-            color: #333;
         }
-        
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+        }
+
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
         }
-        
-        .feature-card {
-            padding: 30px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s;
-            border: 2px solid transparent;
+
+        .feature-box {
+            background: var(--dark-light);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .feature-card:hover {
-            border-color: #667eea;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
         }
-        
-        .feature-icon {
-            font-size: 48px;
+
+        .feature-box i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .feature-box h3 {
+            font-size: 1.5rem;
             margin-bottom: 15px;
         }
-        
-        .feature-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
+
+        .feature-box p {
+            color: var(--text-muted);
+            line-height: 1.7;
         }
-        
-        .feature-desc {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.6;
+
+        /* Counter Section */
+        .counter-section {
+            background: var(--dark-light);
+            display: flex;
+            justify-content: space-around;
+            padding: 80px 20px;
+            border-radius: 30px;
+            margin: 0 50px;
+            border: 1px solid var(--glass-border);
         }
-        
-        /* About Section */
-        .about {
-            padding: 80px 30px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-        
-        .about-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .about-text {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        
-        /* Modules Section */
-        .modules {
-            padding: 80px 30px;
-            background: white;
-        }
-        
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .module-item {
-            padding: 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .module-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-        
-        .module-icon {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        
-        .module-name {
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        /* Stats Section */
-        .stats {
-            padding: 60px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .stat-item h3 {
-            font-size: 36px;
+
+        .counter-box h3 {
+            font-size: 3rem;
+            color: var(--primary);
             margin-bottom: 5px;
         }
-        
-        .stat-item p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
+
         /* Footer */
-        .footer {
-            background: #222;
-            color: white;
+        footer {
+            padding: 50px;
             text-align: center;
-            padding: 30px;
-            font-size: 14px;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
         }
-        
+
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 32px;
-            }
-            
-            .hero p {
-                font-size: 16px;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn-primary, .btn-secondary {
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .section-title {
-                font-size: 28px;
-            }
-            
-            .navbar {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
+            .hero-content h1 { font-size: 2.5rem; }
+            nav { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .section-padding { padding: 60px 20px; }
+            .counter-section { flex-direction: column; gap: 40px; margin: 0 20px; }
         }
     </style>
 </head>
 <body>
 
-<!-- Header Navigation -->
-<div class="navbar">
-    <div class="logo">📚 Student Management System</div>
-    <div class="navbar-right">
-        <?php if (isset($_SESSION['user_id'])): ?>
-            <span class="user-info">👤 Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
-            <?php if ($_SESSION['role'] === 'admin'): ?>
-                <a href="dashboard.php" class="btn-login" style="border-color: #28a745; background: #28a745;">📊 Admin Dashboard</a>
-            <?php elseif ($_SESSION['role'] === 'student'): ?>
-                <a href="student_dashboard.php" class="btn-login" style="border-color: #2196F3; background: #2196F3;">📊 Student Dashboard</a>
+    <nav>
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i> NEXGEN SMS
+        </div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="#stats">Stats</a>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="<?php echo $_SESSION['role'] === 'admin' ? 'dashboard.php' : 'student_dashboard.php'; ?>" class="btn-portal">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+            <?php else: ?>
+                <a href="login_selection.php" class="btn-portal">
+                    <i class="fas fa-lock"></i> Student Portal
+                </a>
             <?php endif; ?>
-            <a href="auth/logout.php" class="btn-logout">🚪 Logout</a>
-        <?php else: ?>
-            <a href="login_selection.php" class="btn-login">🔐 Login</a>
-        <?php endif; ?>
-    </div>
-</div>
-
-<!-- Messages Section -->
-<?php if (isset($_GET['error'])): ?>
-    <div style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 15px 30px; margin: 10px 0; border-radius: 4px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-        <strong>⚠️ Error:</strong> <?php echo htmlspecialchars($_GET['error']); ?>
-    </div>
-<?php endif; ?>
-
-<?php if (isset($_GET['msg'])): ?>
-    <div style="background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px 30px; margin: 10px 0; border-radius: 4px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-        <strong>✓ Success:</strong> <?php echo htmlspecialchars($_GET['msg']); ?>
-    </div>
-<?php endif; ?>
-
-<!-- Hero Section -->
-<div class="hero">
-    <h1>🎓 Student Management System</h1>
-    <p>Complete Solution for Educational Institution Management</p>
-</div>
-
-<!-- About Section -->
-<div class="about">
-    <div class="section-title">About This System</div>
-    <div class="about-content">
-        <div class="about-text">
-            The Student Management System is a comprehensive web-based application designed to streamline educational institution operations. It provides efficient management of students, teachers, courses, attendance, exams, fees, and generates detailed reports.
         </div>
-        <div class="about-text">
-            Built with modern technologies, our system ensures secure access, easy data management, and real-time tracking of academic activities. Whether you're an administrator managing the institution or a student tracking your progress, this system has you covered.
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content" data-aos="zoom-in">
+            <h1>Seamless <span>Education</span> Management</h1>
+            <p>Empowering institutions with next-generation tools for student success, teacher efficiency, and administrative excellence.</p>
+            <div class="hero-btns">
+                <?php if (!isset($_SESSION['user_id'])): ?>
+                    <a href="login_selection.php" class="btn-portal" style="padding: 15px 40px; font-size: 18px;">Get Started</a>
+                <?php else: ?>
+                    <a href="<?php echo $_SESSION['role'] === 'admin' ? 'dashboard.php' : 'student_dashboard.php'; ?>" class="btn-portal" style="padding: 15px 40px; font-size: 18px;">Return to Dashboard</a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Features Section -->
-<div class="features">
-    <div class="section-title">Key Features</div>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">👥</div>
-            <div class="feature-title">Student Management</div>
-            <div class="feature-desc">Complete student profile management with enrollment tracking, photo uploads, and personal details.</div>
+    <section id="features" class="section-padding">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Core Modules</h2>
+            <p>Integrated solutions for every aspect of campus management</p>
         </div>
         
-        <div class="feature-card">
-            <div class="feature-icon">👨‍🏫</div>
-            <div class="feature-title">Teacher Management</div>
-            <div class="feature-desc">Manage teacher information, course assignments, and contact details efficiently.</div>
+        <div class="features-grid">
+            <div class="feature-box" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-user-graduate"></i>
+                <h3>Student Matrix</h3>
+                <p>Complete 360-degree profiles, enrollment histories, and digital documentation at your fingertips.</p>
+            </div>
+            
+            <div class="feature-box" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>Faculty Hub</h3>
+                <p>Assign courses, track performance, and bridge the communication gap between teachers and students.</p>
+            </div>
+            
+            <div class="feature-box" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-book-open"></i>
+                <h3>Course Engine</h3>
+                <p>Advanced curriculum management with flexible durations and dynamic coding assignments.</p>
+            </div>
+
+            <div class="feature-box" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Real-time Attendance</h3>
+                <p>Dynamic marking system with instant reporting and absence notification protocols.</p>
+            </div>
+            
+            <div class="feature-box" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <h3>Financial Portal</h3>
+                <p>Comprehensive fee tracking, automated invoices, and secure payment status monitoring.</p>
+            </div>
+            
+            <div class="feature-box" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Intelligent Analytics</h3>
+                <p>Generate visual reports on students, exams, and institutional trends with one click.</p>
+            </div>
         </div>
-        
-        <div class="feature-card">
-            <div class="feature-icon">📚</div>
-            <div class="feature-title">Course Management</div>
-            <div class="feature-desc">Create and manage courses with unique codes, duration, and course details.</div>
+    </section>
+
+    <div id="stats" class="counter-section" data-aos="fade-right">
+        <div class="counter-box">
+            <h3><span class="count">25</span>+</h3>
+            <p>Active Students</p>
         </div>
-        
-        <div class="feature-card">
-            <div class="feature-icon">📋</div>
-            <div class="feature-title">Attendance Tracking</div>
-            <div class="feature-desc">Mark daily attendance, track presence/absence, and generate attendance reports.</div>
+        <div class="counter-box">
+            <h3><span class="count">10</span>+</h3>
+            <p>Core Modules</p>
         </div>
-        
-        <div class="feature-card">
-            <div class="feature-icon">📝</div>
-            <div class="feature-title">Exam Management</div>
-            <div class="feature-desc">Create exams, record marks, view results with auto-grading and student ranking.</div>
+        <div class="counter-box">
+            <h3><span class="count">100</span>%</h3>
+            <p>Secure Database</p>
         </div>
-        
-        <div class="feature-card">
-            <div class="feature-icon">💰</div>
-            <div class="feature-title">Fee Management</div>
-            <div class="feature-desc">Manage fee structures, record payments, and track outstanding balances.</div>
+        <div class="counter-box">
+            <h3><span class="count">24</span>/7</h3>
+            <p>Support Ready</p>
         </div>
     </div>
-</div>
 
-<!-- Modules Section -->
-<div class="modules">
-    <div class="section-title">Available Modules</div>
-    <div class="modules-grid">
-        <div class="module-item">
-            <div class="module-icon">👥</div>
-            <div class="module-name">Students</div>
+    <section id="about" class="section-padding" style="background: var(--dark-light); margin-top: 100px;">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Why NexGen SMS?</h2>
         </div>
-        <div class="module-item">
-            <div class="module-icon">👨‍🏫</div>
-            <div class="module-name">Teachers</div>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center; color: var(--text-muted); line-height: 2;" data-aos="fade-up">
+            Our platform is built on the principle of efficiency. We eliminate manual paperwork and replace it with a high-performance, responsive environment that adapts to your institution's specific needs. With role-based security and a focus on UX, NexGen is the ultimate Choice for modern educators.
         </div>
-        <div class="module-item">
-            <div class="module-icon">📚</div>
-            <div class="module-name">Courses</div>
-        </div>
-        <div class="module-item">
-            <div class="module-icon">📋</div>
-            <div class="module-name">Attendance</div>
-        </div>
-        <div class="module-item">
-            <div class="module-icon">📝</div>
-            <div class="module-name">Exams</div>
-        </div>
-        <div class="module-item">
-            <div class="module-icon">💰</div>
-            <div class="module-name">Fees</div>
-        </div>
-        <div class="module-item">
-            <div class="module-icon">📊</div>
-            <div class="module-name">Reports</div>
-        </div>
-        <div class="module-item">
-            <div class="module-icon">🔐</div>
-            <div class="module-name">Secure Access</div>
-        </div>
-    </div>
-</div>
+    </section>
 
-<!-- Stats Section -->
-<div class="stats">
-    <div class="section-title" style="color: white;">System Capabilities</div>
-    <div class="stats-grid">
-        <div class="stat-item">
-            <h3>9 Tables</h3>
-            <p>Complete Database Structure</p>
+    <footer>
+        <p>&copy; 2026 NexGen Student Management System. All Rights Reserved.</p>
+        <div style="margin-top: 15px; font-size: 1.2rem; display: flex; justify-content: center; gap: 20px;">
+            <i class="fab fa-facebook hover-primary"></i>
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-linkedin"></i>
         </div>
-        <div class="stat-item">
-            <h3>7 Modules</h3>
-            <p>Core Management Functions</p>
-        </div>
-        <div class="stat-item">
-            <h3>4 Reports</h3>
-            <p>Comprehensive Analytics</p>
-        </div>
-        <div class="stat-item">
-            <p>Password Hashing & SQL Protection</p>
-        </div>
-    </div>
-</div>
+    </footer>
 
-<!-- Footer -->
-<div class="footer">
-    <p>&copy; 2026 Student Management System. All rights reserved. Built with ❤️ for educational institutions.</p>
-</div>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
 
+        // Sticky Nav Effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.padding = '10px 50px';
+                nav.style.background = 'rgba(15, 23, 42, 0.95)';
+            } else {
+                nav.style.padding = '20px 50px';
+                nav.style.background = 'rgba(15, 23, 42, 0.8)';
+            }
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-<!-- when i am login the studne then every feature like my attendance, my result, couser info,fees status this all page in click the ui are not showing proper css are not woriking also same when i am login admin then every funcatiality like student,teachers, course,attendacne, exam , fess in payment , fee structurem, report in all report in click the ui are not shoin propely css are not workin. fixed this issue fast. -->
