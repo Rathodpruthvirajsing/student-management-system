@@ -2,7 +2,24 @@
 // Smart Database Configuration
 // This file automatically detects if it's running locally (XAMPP) or on a live server (InfinityFree)
 
-if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') {
+// Robust Environment Detection
+$is_local = false;
+$local_indicators = ['localhost', '127.0.0.1', '192.168.', '::1'];
+$current_host = $_SERVER['HTTP_HOST'] ?? '';
+
+foreach ($local_indicators as $indicator) {
+    if (stripos($current_host, $indicator) !== false) {
+        $is_local = true;
+        break;
+    }
+}
+
+// Fallback: Check if we are in a XAMPP directory
+if (!$is_local && stripos(__FILE__, 'xampp') !== false) {
+    $is_local = true;
+}
+
+if ($is_local) {
     // Local Settings (XAMPP)
     $host = "localhost";
     $user = "root";
@@ -10,8 +27,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1'
     $database = "student_db";
 } else {
     // InfinityFree Settings
-    // IMPORTANT: Login to your InfinityFree control panel to get these details
-    // Go to "MySQL Databases" to find your Host, Username, and Password
+    // IMPORTANT: These are placeholders. You must replace them with details from your Control Panel
     $host = "sqlXXX.epizy.com";      // Replace with your MySQL Hostname
     $user = "epiz_XXXX_XXXX";        // Replace with your MySQL Username
     $password = "Your_FTP_Password"; // Replace with your MySQL Password
@@ -24,11 +40,16 @@ global $conn;
 // Check if connection already exists and is valid
 if (!isset($conn) || !is_object($conn) || get_class($conn) !== 'mysqli' || !$conn->ping()) {
     // Create new connection
-    $conn = mysqli_connect($host, $user, $password, $database);
+    // Use @ to suppress the warning as we handle errors manually
+    $conn = @mysqli_connect($host, $user, $password, $database);
 
     // Check connection
     if (!$conn) {
-        die(" Database connection failed: " . mysqli_connect_error());
+        // If live connection fails and we thought it was live, maybe show a better message
+        if (!$is_local) {
+            die("Live Database connection failed. Please check your credentials in config/db.php. Error: " . mysqli_connect_error());
+        }
+        die("Local Database connection failed: " . mysqli_connect_error());
     }
 
     // Set charset to utf8
@@ -40,4 +61,5 @@ if (!isset($conn) || !is_object($conn) || get_class($conn) !== 'mysqli' || !$con
     // Disable automatic error reporting to prevent issues on production
     mysqli_report(MYSQLI_REPORT_OFF);
 }
-?>
+?>
+
