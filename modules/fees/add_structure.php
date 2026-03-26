@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($course_id) || empty($total_fee)) {
         $error = "All fields are required";
+    } elseif ($total_fee <= 0) {
+        $error = "Warning: Total fee must be a positive number";
     } else {
         $check = mysqli_query($conn, "SELECT id FROM fee_structure WHERE course_id='$course_id'");
         if (mysqli_num_rows($check) > 0) {

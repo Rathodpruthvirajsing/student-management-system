@@ -1,31 +1,47 @@
 <?php
-include "../../auth/session.php";
-include "../../config/db.php";
+session_start();
 
-// Check if student
-if ($_SESSION['role'] !== 'student') {
-    header("Location: ../../dashboard.php");
+// Check if authorized (Student or Parent)
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['student', 'parent'])) {
+    header("Location: ../../index.php?error=Unauthorized+access");
     exit();
 }
 
+include "../../config/db.php";
 include "../../includes/header.php";
 include "../../includes/sidebar.php";
 
-// Get current student info
-$user_id = $_SESSION['user_id'];
-$student_query = "SELECT s.*, c.course_name, c.id as course_id FROM students s 
-                  LEFT JOIN courses c ON s.course_id = c.id 
-                  WHERE s.email = (SELECT email FROM users WHERE id='$user_id')";
-$student_result = mysqli_query($conn, $student_query);
-$student = mysqli_fetch_assoc($student_result);
+$student_id = null;
 
-// Check if student exists
-if (!$student) {
-    header("Location: ../../auth/logout.php");
-    exit();
+if ($_SESSION['role'] === 'student') {
+    // Get student info from session
+    $user_id = $_SESSION['user_id'];
+    $student_query = "SELECT s.*, c.course_name, c.id as course_id FROM students s 
+                      LEFT JOIN courses c ON s.course_id = c.id 
+                      WHERE s.email = (SELECT email FROM users WHERE id='$user_id')";
+    $student_result = mysqli_query($conn, $student_query);
+    $student = mysqli_fetch_assoc($student_result);
+    if (!$student) { header("Location: ../../auth/logout.php"); exit(); }
+    $student_id = $student['id'];
+} elseif ($_SESSION['role'] === 'parent') {
+    // Get child ID linked to parent
+    $user_email = $_SESSION['user_email'];
+    $parent_query = "SELECT student_id FROM parents WHERE email = '$user_email'";
+    $parent_result = mysqli_query($conn, $parent_query);
+    $parent = mysqli_fetch_assoc($parent_result);
+    if (!$parent || !$parent['student_id']) { 
+        echo "<div class='content'><h2>Error</h2><p>No linked student found for this parent account.</p></div>";
+        include "../../includes/footer.php";
+        exit(); 
+    }
+    $student_inner_id = $parent['student_id'];
+    $student_query = "SELECT s.*, c.course_name, c.id as course_id FROM students s 
+                      LEFT JOIN courses c ON s.course_id = c.id 
+                      WHERE s.id = '$student_inner_id'";
+    $student_result = mysqli_query($conn, $student_query);
+    $student = mysqli_fetch_assoc($student_result);
+    $student_id = $student['id'];
 }
-
-$student_id = $student['id'];
 $course_id = $student['course_id'];
 
 // Get fee structure for student's course
@@ -40,13 +56,17 @@ if ($course_id) {
 $total_fee = $fee_structure['total_fee'] ?? 0;
 
 // Get all payments for this student
-$payments_query = "SELECT * FROM fee_payments WHERE student_id='$student_id' ORDER BY payment_date DESC";
-$payments_result = mysqli_query($conn, $payments_query);
 $payments = [];
 $paid_amount = 0;
-while ($payment = mysqli_fetch_assoc($payments_result)) {
-    $payments[] = $payment;
-    $paid_amount += $payment['amount_paid'];
+if ($student_id) {
+    $payments_query = "SELECT * FROM fee_payments WHERE student_id='$student_id' ORDER BY payment_date DESC";
+    $payments_result = mysqli_query($conn, $payments_query);
+    if ($payments_result) {
+        while ($payment = mysqli_fetch_assoc($payments_result)) {
+            $payments[] = $payment;
+            $paid_amount += $payment['amount_paid'];
+        }
+    }
 }
 
 $pending_amount = $total_fee - $paid_amount;
@@ -150,13 +170,13 @@ $status_color = $status === 'FULLY PAID' ? '#28a745' : ($status === 'PARTIAL' ? 
                                 </td>
                                 <td style="padding: 15px; color: #666;">
                                     <?php 
-                                        $method = htmlspecialchars($payment['payment_method']);
-                                        $method_badge = $method === 'Cash' ? '💵' : ($method === 'Cheque' ? '📄' : ($method === 'Online' ? '💳' : '🏦'));
+                                        $method = htmlspecialchars($payment['payment_mode'] ?? 'N/A');
+                                        $method_badge = $method === 'Cash' ? '💵' : ($method === 'UPI' ? '📱' : ($method === 'Card' ? '💳' : '🏦'));
                                         echo $method_badge . ' ' . $method;
                                     ?>
                                 </td>
                                 <td style="padding: 15px; color: #666;">
-                                    <?php echo $payment['notes'] ? htmlspecialchars($payment['notes']) : '-'; ?>
+                                    <?php echo (isset($payment['notes']) && $payment['notes']) ? htmlspecialchars($payment['notes']) : '-'; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

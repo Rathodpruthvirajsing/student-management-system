@@ -27,3 +27,27 @@ Field: course_code | Type: varchar(50) | Null: NO | Default: NULL
 Field: duration | Type: varchar(50) | Null: YES | Default: NULL
 Field: created_at | Type: timestamp | Null: NO | Default: current_timestamp()
 
+--- attendance ---
+Field: id | Type: int(11) | Null: NO | Default: NULL
+Field: student_id | Type: int(11) | Null: NO | Default: NULL
+Field: course_id | Type: int(11) | Null: NO | Default: NULL
+Field: attendance_date | Type: date | Null: NO | Default: NULL
+Field: status | Type: enum('Present','Absent','Leave') | Null: NO | Default: NULL
+Field: marked_by | Type: int(11) | Null: YES | Default: NULL
+Field: created_at | Type: timestamp | Null: NO | Default: current_timestamp()
+
+--- teachers ---
+Field: id | Type: int(11) | Null: NO | Default: NULL
+Field: name | Type: varchar(100) | Null: NO | Default: NULL
+Field: email | Type: varchar(150) | Null: YES | Default: NULL
+Field: phone | Type: varchar(15) | Null: YES | Default: NULL
+Field: course_id | Type: int(11) | Null: YES | Default: NULL
+Field: created_at | Type: timestamp | Null: NO | Default: current_timestamp()
+
+--- teacher_attendance ---
+Field: id | Type: int(11) | Null: NO | Default: NULL
+Field: teacher_id | Type: int(11) | Null: NO | Default: NULL
+Field: attendance_date | Type: date | Null: NO | Default: NULL
+Field: status | Type: enum('Present','Absent','Late','Leave') | Null: NO | Default: NULL
+Field: marked_at | Type: timestamp | Null: NO | Default: current_timestamp()
+

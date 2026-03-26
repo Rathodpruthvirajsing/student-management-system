@@ -101,7 +101,7 @@ if ($student['course_id']) {
 ?>
 
 <div class="content">
-    <h2 class="dashboard-title">📊 Welcome, <?php echo htmlspecialchars($student['name']); ?></h2>
+    <h2 class="dashboard-title">🎒 Student Dashboard — Welcome, <?php echo htmlspecialchars($student['name']); ?></h2>
 
     <!-- Student Profile Section -->
     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #667eea;">

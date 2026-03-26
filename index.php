@@ -42,11 +42,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && !isset($_GET['typ
             <p>
                 <?php 
                 $type = $_GET['type'] ?? 'student';
-                if ($type === 'admin') {
-                    echo 'Admin Login <span class="login-type-badge admin">ADMIN</span>';
-                } else {
-                    echo 'Student Login <span class="login-type-badge">STUDENT</span>';
-                }
+                $role_label = ucfirst($type);
+                $badge_class = ($type === 'admin') ? 'admin' : '';
+                echo $role_label . ' Login <span class="login-type-badge ' . $badge_class . '">' . strtoupper($type) . '</span>';
                 ?>
             </p>
         </div>

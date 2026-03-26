@@ -27,10 +27,11 @@ $teachers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FRO
 $exams = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM exams"));
 $attendance = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(DISTINCT student_id) as total FROM attendance WHERE status='Present'"));
 $fees_collected = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COALESCE(SUM(amount_paid), 0) as total FROM fee_payments"));
+
 ?>
 
 <div class="content">
-    <h2 class="dashboard-title">Dashboard</h2>
+    <h2 class="dashboard-title">📊 Admin Dashboard</h2>
 
     <div class="card-container">
         <div class="card card-blue">
@@ -70,6 +71,7 @@ $fees_collected = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COALESCE(SUM(am
         </div>
     </div>
 
+
     <div class="dashboard-section">
         <h3>Quick Links</h3>
         <div class="quick-links">
@@ -82,5 +84,6 @@ $fees_collected = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COALESCE(SUM(am
         </div>
     </div>
 </div>
+
 
 <?php include "includes/footer.php"; ?>

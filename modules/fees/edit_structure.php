@@ -5,7 +5,12 @@ include "../../includes/header.php";
 include "../../includes/sidebar.php";
 
 $error = '';
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? $_GET['id'] : '';
+
+if (empty($id)) {
+    header("Location: structure.php?error=Invalid structure ID");
+    exit();
+}
 
 $sql = "SELECT fs.*, c.course_name FROM fee_structure fs LEFT JOIN courses c ON fs.course_id = c.id WHERE fs.id='$id'";
 $result = mysqli_query($conn, $sql);

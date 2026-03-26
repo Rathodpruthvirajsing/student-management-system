@@ -2,7 +2,7 @@
 include __DIR__ . '/config/db.php';
 
 // Alter users.role enum to include 'student'
-$alter = "ALTER TABLE users MODIFY role ENUM('admin','teacher','student') DEFAULT 'admin'";
+$alter = "ALTER TABLE users MODIFY role ENUM('admin','teacher','student','parent') DEFAULT 'admin'";
 if (!mysqli_query($conn, $alter)) {
     echo "ALTER_ERROR: " . mysqli_error($conn) . "\n";
     exit(1);

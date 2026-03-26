@@ -44,8 +44,15 @@ $payments = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 foreach ($payments as $payment) { 
                     $paid = $payment['amount_paid'];
                     $total = $payment['total_fee'];
-                    $remaining = $total - $paid;
-                    $status = ($remaining <= 0) ? 'Paid' : 'Pending';
+                    if ($total === null) {
+                        $status = 'Structure Missing';
+                        $status_class = 'warn';
+                    } else {
+                        $paid = $payment['amount_paid'];
+                        $remaining = $total - $paid;
+                        $status = ($remaining <= 0) ? 'Paid' : 'Pending';
+                        $status_class = strtolower($status);
+                    }
                 ?>
                     <tr>
                         <td><?php echo htmlspecialchars($payment['student_name']); ?></td>
@@ -54,7 +61,7 @@ $payments = mysqli_fetch_all($result, MYSQLI_ASSOC);
                         <td>Rs. <?php echo number_format($payment['amount_paid'], 2); ?></td>
                         <td><?php echo date('d-M-Y', strtotime($payment['payment_date'])); ?></td>
                         <td><?php echo htmlspecialchars($payment['payment_mode']); ?></td>
-                        <td><span class="status-<?php echo strtolower($status); ?>"><?php echo $status; ?></span></td>
+                        <td><span class="status-<?php echo $status_class; ?>"><?php echo $status; ?></span></td>
                         <td>
                             <a href="delete.php?id=<?php echo $payment['id']; ?>" class="btn btn-delete" onclick="return confirm('Delete this payment?');">Delete</a>
                         </td>

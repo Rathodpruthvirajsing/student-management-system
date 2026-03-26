@@ -1,7 +1,7 @@
 <?php
 include "config/db.php";
 $out = "";
-$tables = ['users', 'students', 'courses'];
+$tables = ['users', 'students', 'courses', 'attendance', 'teachers', 'teacher_attendance'];
 foreach($tables as $table) {
     $out .= "--- $table ---\n";
     $q = mysqli_query($conn, "DESCRIBE $table");

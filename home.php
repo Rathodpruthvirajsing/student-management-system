@@ -49,26 +49,29 @@ session_start();
             align-items: center;
         }
         
-        .btn-login, .btn-logout {
+        .btn-login, .btn-register, .btn-logout {
             padding: 10px 25px;
             border: 2px solid white;
             color: white;
-            background: transparent;
+            background: rgba(255,255,255,0.1);
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .btn-login:hover {
+        .btn-login:hover, .btn-register:hover {
             background: white;
             color: #667eea;
         }
         
         .btn-logout:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.3);
         }
         
         .user-info {
@@ -81,7 +84,7 @@ session_start();
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 100px 30px;
-            text-align: center;
+            text-align: left;
         }
         
         .hero h1 {
@@ -99,7 +102,7 @@ session_start();
         .hero-buttons {
             display: flex;
             gap: 20px;
-            justify-content: center;
+            justify-content: flex-start;
             flex-wrap: wrap;
         }
         
@@ -320,14 +323,15 @@ session_start();
     <div class="navbar-right">
         <?php if (isset($_SESSION['user_id'])): ?>
             <span class="user-info">👤 Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
-            <?php if ($_SESSION['role'] === 'admin'): ?>
-                <a href="dashboard.php" class="btn-login" style="border-color: #28a745; background: #28a745;">📊 Admin Dashboard</a>
-            <?php elseif ($_SESSION['role'] === 'student'): ?>
-                <a href="student_dashboard.php" class="btn-login" style="border-color: #2196F3; background: #2196F3;">📊 Student Dashboard</a>
-            <?php endif; ?>
-            <a href="auth/logout.php" class="btn-logout">🚪 Logout</a>
+            <?php 
+            $dash_link = "dashboard.php";
+            if ($_SESSION['role'] === 'student') $dash_link = "student_dashboard.php";
+            ?>
+            <a href="<?php echo $dash_link; ?>" class="btn-login" style="border-color: #2196F3; background: #2196F3;"><span>📊</span> Dashboard</a>
+            <a href="auth/logout.php" class="btn-logout"><span>🚪</span> Logout</a>
         <?php else: ?>
-            <a href="login_selection.php" class="btn-login">🔐 Login</a>
+            <a href="login_selection.php" class="btn-login"><span>🔐</span> Login</a>
+            <a href="registration_selection.php" class="btn-register"><span>📝</span> Register</a>
         <?php endif; ?>
     </div>
 </div>
@@ -349,6 +353,10 @@ session_start();
 <div class="hero">
     <h1>🎓 Student Management System</h1>
     <p>Complete Solution for Educational Institution Management</p>
+    <div class="hero-buttons">
+        <a href="registration_selection.php" class="btn-primary" style="display: inline-block; text-decoration: none;">📝 Register Now</a>
+        <a href="#features" class="btn-secondary" style="display: inline-block; text-decoration: none;">🔍 Explore More</a>
+    </div>
 </div>
 
 <!-- About Section -->
@@ -403,6 +411,30 @@ session_start();
             <div class="feature-title">Fee Management</div>
             <div class="feature-desc">Manage fee structures, record payments, and track outstanding balances.</div>
         </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📂</div>
+            <div class="feature-title">Assignments</div>
+            <div class="feature-desc">Teachers can upload learning resources and assignments while students can submit their work online.</div>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-title">Online Quizzes</div>
+            <div class="feature-desc">Interactive quiz portal with auto-grading, time limits, and performance tracking.</div>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <div class="feature-title">Chat Support</div>
+            <div class="feature-desc">Integrated messaging system for students to connect with faculties and administration.</div>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🔔</div>
+            <div class="feature-title">Notice Board</div>
+            <div class="feature-desc">Keep everyone informed with real-time school notifications and announcements.</div>
+        </div>
     </div>
 </div>
 
@@ -437,6 +469,26 @@ session_start();
         <div class="module-item">
             <div class="module-icon">📊</div>
             <div class="module-name">Reports</div>
+        </div>
+        <div class="module-item">
+            <div class="module-icon">📂</div>
+            <div class="module-name">Assignments</div>
+        </div>
+        <div class="module-item">
+            <div class="module-icon">🤖</div>
+            <div class="module-name">Quizzes</div>
+        </div>
+        <div class="module-item">
+            <div class="module-icon">💬</div>
+            <div class="module-name">Live Chat</div>
+        </div>
+        <div class="module-item">
+            <div class="module-icon">🔔</div>
+            <div class="module-name">Notices</div>
+        </div>
+        <div class="module-item">
+            <div class="module-icon">📅</div>
+            <div class="module-name">Timetable</div>
         </div>
         <div class="module-item">
             <div class="module-icon">🔐</div>

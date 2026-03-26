@@ -51,11 +51,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                  . "; ip=" . ($_SERVER['REMOTE_ADDR'] ?? 'CLI') . "\n";
             @file_put_contents(__DIR__ . "/../logs/login_debug.log", $log, FILE_APPEND);
 
-            // Redirect based on role stored in DB
-            if ($user['role'] === 'student') {
-                header("Location: ../student_dashboard.php");
-            } else {
-                header("Location: ../dashboard.php");
+            // Redirect based on role
+            switch ($user['role']) {
+                case 'student':
+                    header("Location: ../student_dashboard.php");
+                    break;
+                case 'teacher':
+                    header("Location: ../modules/teachers/dashboard.php");
+                    break;
+                case 'parent':
+                    header("Location: ../modules/parents/dashboard.php");
+                    break;
+                case 'admin':
+                default:
+                    header("Location: ../dashboard.php");
+                    break;
             }
             exit();
         } else {

@@ -198,26 +198,42 @@ session_start();
     <!-- Content -->
     <div class="content">
         <div class="info">
-            ℹ️ Select whether you are a <strong>Student</strong> or <strong>Admin</strong> to continue with appropriate login.
+            ℹ️ Select whether you are a <strong>Student</strong>, <strong>Teacher</strong>, <strong>Parent</strong>, or <strong>Admin</strong> to continue.
         </div>
         
         <!-- Login Options -->
         <form method="POST" action="process_login_selection.php">
             <div class="login-options">
-                <!-- Student Login -->
-                <label class="login-option" onclick="selectRole('student', this)">
-                    <input type="radio" name="role" value="student" style="display: none;">
-                    <div class="option-icon">👨‍🎓</div>
-                    <div class="option-title">Student Login</div>
-                    <div class="option-desc">Login with your email and password to access your dashboard and grades</div>
-                </label>
-                
                 <!-- Admin Login -->
                 <label class="login-option" onclick="selectRole('admin', this)">
                     <input type="radio" name="role" value="admin" style="display: none;">
                     <div class="option-icon">👨‍💼</div>
                     <div class="option-title">Admin Login</div>
-                    <div class="option-desc">Login as administrator to manage all system components and data</div>
+                    <div class="option-desc">Manage institutional data and overall system controls.</div>
+                </label>
+
+                <!-- Student Login -->
+                <label class="login-option" onclick="selectRole('student', this)">
+                    <input type="radio" name="role" value="student" style="display: none;">
+                    <div class="option-icon">👨‍🎓</div>
+                    <div class="option-title">Student Login</div>
+                    <div class="option-desc">Track academic progress, course performance, and attendance.</div>
+                </label>
+
+                <!-- Teacher Login -->
+                <label class="login-option" onclick="selectRole('teacher', this)">
+                    <input type="radio" name="role" value="teacher" style="display: none;">
+                    <div class="option-icon">👨‍🏫</div>
+                    <div class="option-title">Teacher Login</div>
+                    <div class="option-desc">Conduct assessments, manage curricula, and input performance data.</div>
+                </label>
+
+                <!-- Parent Login -->
+                <label class="login-option" onclick="selectRole('parent', this)">
+                    <input type="radio" name="role" value="parent" style="display: none;">
+                    <div class="option-icon">👪</div>
+                    <div class="option-title">Parent Login</div>
+                    <div class="option-desc">Monitor child's academic journey, fee statuses, and achievements.</div>
                 </label>
             </div>
             

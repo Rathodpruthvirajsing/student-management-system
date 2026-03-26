@@ -33,12 +33,12 @@ $sql_users = "CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin','teacher','student') DEFAULT 'admin',
+    role ENUM('admin','teacher','student','parent') DEFAULT 'admin',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )";
 
 // Also fix existing databases that may have the old ENUM
-$sql_fix_role_enum = "ALTER TABLE users MODIFY COLUMN role ENUM('admin','teacher','student') DEFAULT 'admin'";
+$sql_fix_role_enum = "ALTER TABLE users MODIFY COLUMN role ENUM('admin','teacher','student','parent') DEFAULT 'admin'";
 
 
 $sql_courses = "CREATE TABLE IF NOT EXISTS courses (
@@ -126,10 +126,20 @@ $sql_fee_payments = "CREATE TABLE IF NOT EXISTS fee_payments (
     FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
 )";
 
+$sql_parents = "CREATE TABLE IF NOT EXISTS parents (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150),
+    phone VARCHAR(15),
+    student_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE SET NULL
+)";
+
 // Execute table creation
 $tables = [
     $sql_users, $sql_courses, $sql_teachers, $sql_students, 
-    $sql_attendance, $sql_exams, $sql_marks, $sql_fee_structure, $sql_fee_payments
+    $sql_attendance, $sql_exams, $sql_marks, $sql_fee_structure, $sql_fee_payments, $sql_parents
 ];
 
 foreach ($tables as $sql) {

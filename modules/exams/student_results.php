@@ -1,46 +1,63 @@
 <?php
-include "../../auth/session.php";
-include "../../config/db.php";
+session_start();
 
-// Check if student
-if ($_SESSION['role'] !== 'student') {
-    header("Location: ../../dashboard.php");
+// Check if authorized (Student or Parent)
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['student', 'parent'])) {
+    header("Location: ../../index.php?error=Unauthorized+access");
     exit();
 }
 
+include "../../config/db.php";
 include "../../includes/header.php";
 include "../../includes/sidebar.php";
 
-// Get student info
-$user_id = $_SESSION['user_id'];
-$student_query = "SELECT id, email, name FROM students WHERE email = (SELECT email FROM users WHERE id='$user_id')";
-$student_result = mysqli_query($conn, $student_query);
-$student = mysqli_fetch_assoc($student_result);
+$student_id = null;
 
-// Check if student exists
-if (!$student) {
-    header("Location: ../../auth/logout.php");
-    exit();
+if ($_SESSION['role'] === 'student') {
+    // Get student info from session
+    $user_id = $_SESSION['user_id'];
+    $student_query = "SELECT id FROM students WHERE email = (SELECT email FROM users WHERE id='$user_id')";
+    $student_result = mysqli_query($conn, $student_query);
+    $student = mysqli_fetch_assoc($student_result);
+    if (!$student) { header("Location: ../../auth/logout.php"); exit(); }
+    $student_id = $student['id'];
+} elseif ($_SESSION['role'] === 'parent') {
+    // Get child ID linked to parent
+    $user_email = $_SESSION['user_email'];
+    $parent_query = "SELECT student_id FROM parents WHERE email = '$user_email'";
+    $parent_result = mysqli_query($conn, $parent_query);
+    $parent = mysqli_fetch_assoc($parent_result);
+    if (!$parent || !$parent['student_id']) { 
+        echo "<div class='content'><h2>Error</h2><p>No linked student found for this parent account.</p></div>";
+        include "../../includes/footer.php";
+        exit(); 
+    }
+    $student_id = $parent['student_id'];
 }
 
-$student_id = $student['id'];
-
 // Get student marks for this student only
-$marks_query = "SELECT e.id, e.exam_name, e.total_marks, m.marks_obtained, c.course_name
-                FROM marks m 
-                JOIN exams e ON m.exam_id = e.id 
-                JOIN courses c ON e.course_id = c.id
-                WHERE m.student_id='$student_id'
-                ORDER BY e.exam_name DESC";
-$marks_result = mysqli_query($conn, $marks_query);
-$marks = mysqli_fetch_all($marks_result, MYSQLI_ASSOC);
+$marks = [];
+if ($student_id) {
+    $marks_query = "SELECT e.id, e.exam_name, e.total_marks, m.marks_obtained, c.course_name
+                    FROM marks m 
+                    JOIN exams e ON m.exam_id = e.id 
+                    JOIN courses c ON e.course_id = c.id
+                    WHERE m.student_id='$student_id'
+                    ORDER BY e.exam_name DESC";
+    $marks_result = mysqli_query($conn, $marks_query);
+    if ($marks_result) {
+        $marks = mysqli_fetch_all($marks_result, MYSQLI_ASSOC);
+    }
+}
 
 // Calculate average marks
 $total_marks_obtained = 0;
 $total_marks_possible = 0;
 foreach ($marks as $mark) {
-    $total_marks_obtained += $mark['marks_obtained'];
-    $total_marks_possible += $mark['total_marks'];
+    if (isset($mark['marks_obtained']) && isset($mark['total_marks'])) {
+        $total_marks_obtained += $mark['marks_obtained'];
+        $total_marks_possible += $mark['total_marks'];
+    }
 }
 $overall_percentage = $total_marks_possible > 0 ? round(($total_marks_obtained / $total_marks_possible) * 100, 2) : 0;
 ?>

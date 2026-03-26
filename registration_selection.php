@@ -198,26 +198,42 @@ session_start();
     <!-- Content -->
     <div class="content">
         <div class="info">
-            ℹ️ Select whether you want to register as a <strong>Student</strong> or <strong>Admin</strong> to create your account.
+            ℹ️ Select whether you want to register as a <strong>Student</strong>, <strong>Teacher</strong>, <strong>Parent</strong>, or <strong>Admin</strong>.
         </div>
         
         <!-- Registration Options -->
         <form method="POST" action="process_registration_selection.php">
             <div class="registration-options">
-                <!-- Student Registration -->
-                <label class="registration-option" onclick="selectRole('student', this)">
-                    <input type="radio" name="role" value="student" style="display: none;">
-                    <div class="option-icon">👨‍🎓</div>
-                    <div class="option-title">Student Registration</div>
-                    <div class="option-desc">Register as a student to access your courses, grades, and dashboard</div>
-                </label>
-                
                 <!-- Admin Registration -->
                 <label class="registration-option" onclick="selectRole('admin', this)">
                     <input type="radio" name="role" value="admin" style="display: none;">
                     <div class="option-icon">👨‍💼</div>
-                    <div class="option-title">Admin Registration</div>
-                    <div class="option-desc">Register as an administrator to manage system components and data</div>
+                    <div class="option-title">Admin Account</div>
+                    <div class="option-desc">Create an administrative account to oversee system resources.</div>
+                </label>
+
+                <!-- Student Registration -->
+                <label class="registration-option" onclick="selectRole('student', this)">
+                    <input type="radio" name="role" value="student" style="display: none;">
+                    <div class="option-icon">👨‍🎓</div>
+                    <div class="option-title">Student Account</div>
+                    <div class="option-desc">Register as a student to enroll in courses and track grades.</div>
+                </label>
+
+                <!-- Teacher Registration -->
+                <label class="registration-option" onclick="selectRole('teacher', this)">
+                    <input type="radio" name="role" value="teacher" style="display: none;">
+                    <div class="option-icon">👨‍🏫</div>
+                    <div class="option-title">Teacher Account</div>
+                    <div class="option-desc">Register as a faculty member to manage classes and students.</div>
+                </label>
+
+                <!-- Parent Registration -->
+                <label class="registration-option" onclick="selectRole('parent', this)">
+                    <input type="radio" name="role" value="parent" style="display: none;">
+                    <div class="option-icon">👪</div>
+                    <div class="option-title">Parent Account</div>
+                    <div class="option-desc">Register as a parent to monitor child's educational progress.</div>
                 </label>
             </div>
             

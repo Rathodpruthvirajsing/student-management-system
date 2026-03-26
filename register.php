@@ -6,7 +6,7 @@ $error = '';
 $success = '';
 
 // Get registration role from URL or default to 'student'
-$registration_role = isset($_GET['role']) && in_array($_GET['role'], ['student', 'admin']) ? $_GET['role'] : 'student';
+$registration_role = isset($_GET['role']) && in_array($_GET['role'], ['student', 'admin', 'teacher', 'parent']) ? $_GET['role'] : 'student';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
-    $role = isset($_POST['role']) && in_array($_POST['role'], ['student', 'admin']) ? $_POST['role'] : 'student';
+    $role = isset($_POST['role']) && in_array($_POST['role'], ['student', 'admin', 'teacher', 'parent']) ? $_POST['role'] : 'student';
     
     // Validation
     if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
@@ -84,19 +84,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                         if (mysqli_query($conn, $sql_student)) {
                             $success = "✓ Student registration successful! Please login with your email and password.";
-                            // Clear form
-                            $_POST = [];
                         } else {
-                            // Delete from users if student insertion fails
                             mysqli_query($conn, "DELETE FROM users WHERE id=$user_id");
                             $error = "Error creating student record: " . mysqli_error($conn);
                         }
+                    } elseif ($role === 'teacher') {
+                        // Insert into teachers table
+                        $phone = mysqli_real_escape_string($conn, $_POST['phone'] ?? '');
+                        $course_id = isset($_POST['course_id']) ? intval($_POST['course_id']) : 'NULL';
+                        
+                        $sql_teacher = "INSERT INTO teachers (name, email, phone, course_id) VALUES ('$name', '$email', '$phone', $course_id)";
+                        if (mysqli_query($conn, $sql_teacher)) {
+                            $success = "✓ Teacher account created! Please login.";
+                        } else {
+                            mysqli_query($conn, "DELETE FROM users WHERE id=$user_id");
+                            $error = "Teacher record failed: " . mysqli_error($conn);
+                        }
+                    } elseif ($role === 'parent') {
+                        // Insert into parents table
+                        $selected_student_id = isset($_POST['student_id']) && !empty($_POST['student_id']) ? intval($_POST['student_id']) : NULL;
+                        
+                        if ($selected_student_id === NULL) {
+                            mysqli_query($conn, "DELETE FROM users WHERE id=$user_id");
+                            $error = "Please select a student (your child) from the list.";
+                        } else {
+                            // Verify student exists
+                            $verify_student = mysqli_query($conn, "SELECT id FROM students WHERE id=$selected_student_id LIMIT 1");
+                            if (!$verify_student || mysqli_num_rows($verify_student) === 0) {
+                                mysqli_query($conn, "DELETE FROM users WHERE id=$user_id");
+                                $error = "Selected student not found. Please try again.";
+                            } else {
+                                $sql_parent = "INSERT INTO parents (name, email, student_id) VALUES ('$name', '$email', $selected_student_id)";
+                                if (mysqli_query($conn, $sql_parent)) {
+                                    $success = "✓ Parent account created! Please login.";
+                                } else {
+                                    mysqli_query($conn, "DELETE FROM users WHERE id=$user_id");
+                                    $error = "Parent record failed: " . mysqli_error($conn);
+                                }
+                            }
+                        }
                     } else {
                         // Admin registration
-                        $success = "✓ Admin account created successfully! Please login with your email and password.";
-                        // Clear form
-                        $_POST = [];
+                        $success = "✓ Admin account created successfully! Please login.";
                     }
+                    
+                    if ($success) $_POST = [];
                 } else {
                     $error = "Error during registration: " . mysqli_error($conn);
                 }
@@ -108,6 +140,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Fetch courses
 $courses_result = mysqli_query($conn, "SELECT id, course_name FROM courses ORDER BY course_name ASC");
 $courses = mysqli_fetch_all($courses_result, MYSQLI_ASSOC);
+
+// Fetch students for parent registration (student selection dropdown)
+$students_for_parent = [];
+if ($registration_role === 'parent') {
+    $students_result = mysqli_query($conn, "SELECT s.id, s.name, s.enrollment_no, c.course_name FROM students s LEFT JOIN courses c ON s.course_id = c.id ORDER BY s.name ASC");
+    if ($students_result) {
+        $students_for_parent = mysqli_fetch_all($students_result, MYSQLI_ASSOC);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -265,7 +306,16 @@ $courses = mysqli_fetch_all($courses_result, MYSQLI_ASSOC);
 
 <div class="register-container">
     <div class="register-header">
-        <h2><?php echo ($registration_role === 'admin' ? '👨‍💼 Admin Registration' : '👨‍🎓 Student Registration'); ?></h2>
+        <h2>
+            <?php 
+            switch($registration_role) {
+                case 'admin': echo '👨‍💼 Admin Registration'; break;
+                case 'teacher': echo '👨‍🏫 Teacher Registration'; break;
+                case 'parent': echo '👪 Parent Registration'; break;
+                default: echo '👨‍🎓 Student Registration';
+            }
+            ?>
+        </h2>
         <p>Create your account to access the system</p>
     </div>
 
@@ -288,7 +338,7 @@ $courses = mysqli_fetch_all($courses_result, MYSQLI_ASSOC);
                 <input type="hidden" name="role" value="<?php echo htmlspecialchars($registration_role); ?>">
                 
                 <?php if ($registration_role === 'student'): ?>
-                    <!-- STUDENT REGISTRATION FORM -->
+                    <!-- STUDENT REGISTRATION FORM (Existing code) -->
                     <div class="form-row">
                         <div class="form-group">
                             <label>Full Name <span class="required">*</span></label>
@@ -357,6 +407,95 @@ $courses = mysqli_fetch_all($courses_result, MYSQLI_ASSOC);
 
                     <button type="submit" class="btn-register">📝 Create Student Account</button>
 
+                <?php elseif ($registration_role === 'teacher'): ?>
+                    <!-- TEACHER REGISTRATION FORM -->
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <input type="text" name="name" placeholder="Enter your full name" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" name="email" placeholder="your.email@example.com" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Password <span class="required">*</span></label>
+                            <input type="password" name="password" placeholder="Min. 6 characters" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password <span class="required">*</span></label>
+                            <input type="password" name="confirm_password" placeholder="Re-enter password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" name="phone" placeholder="+91 XXXXXXXXXX" value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label>Assigned Course</label>
+                            <select name="course_id">
+                                <option value="">Select Course</option>
+                                <?php foreach ($courses as $course): ?>
+                                    <option value="<?php echo $course['id']; ?>">
+                                        <?php echo htmlspecialchars($course['course_name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-register">👨‍🏫 Create Teacher Account</button>
+
+                <?php elseif ($registration_role === 'parent'): ?>
+                    <!-- PARENT REGISTRATION FORM -->
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <input type="text" name="name" placeholder="Enter your full name" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" name="email" placeholder="your.email@example.com" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Password <span class="required">*</span></label>
+                            <input type="password" name="password" placeholder="Min. 6 characters" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password <span class="required">*</span></label>
+                            <input type="password" name="confirm_password" placeholder="Re-enter password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Your Child (Student) <span class="required">*</span></label>
+                        <select name="student_id" id="student_select" required style="padding: 12px; font-size: 14px;">
+                            <option value="">-- Select your child --</option>
+                            <?php if (count($students_for_parent) > 0): ?>
+                                <?php foreach ($students_for_parent as $student): ?>
+                                    <option value="<?php echo $student['id']; ?>" 
+                                        <?php echo (isset($_POST['student_id']) && $_POST['student_id'] == $student['id']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($student['name']); ?> — Enrollment: <?php echo htmlspecialchars($student['enrollment_no']); ?>
+                                        <?php if (!empty($student['course_name'])): ?>
+                                            (<?php echo htmlspecialchars($student['course_name']); ?>)
+                                        <?php endif; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <option value="" disabled>No students registered yet</option>
+                            <?php endif; ?>
+                        </select>
+                        <small style="color: #666; display: block; margin-top: 5px;">👆 Select the student you are a parent/guardian of from the list above.</small>
+                    </div>
+
+                    <button type="submit" class="btn-register">👪 Create Parent Account</button>
+
                 <?php else: ?>
                     <!-- ADMIN REGISTRATION FORM -->
                     <div class="form-group">
@@ -380,8 +519,8 @@ $courses = mysqli_fetch_all($courses_result, MYSQLI_ASSOC);
                         </div>
                     </div>
 
-                    <div class="alert-error" style="background: #fff3cd; border-left-color: #ffc107; color: #856404;">
-                        ⚠️ <strong>Note:</strong> Admin accounts have system-wide access. Please ensure you trust this registration.
+                    <div class="alert-error" style="background: #fff3cd; border-left-color: #ffc107; color: #856404; font-size: 13px;">
+                        ⚠️ <strong>Note:</strong> Admin accounts have system-wide access.
                     </div>
 
                     <button type="submit" class="btn-register">👨‍💼 Create Admin Account</button>
@@ -389,13 +528,9 @@ $courses = mysqli_fetch_all($courses_result, MYSQLI_ASSOC);
                 <?php endif; ?>
 
                 <div class="login-link">
-                    <?php if ($registration_role === 'student'): ?>
-                        Want to register as admin instead? <a href="registration_selection.php">Change role</a>
-                    <?php else: ?>
-                        Want to register as student instead? <a href="registration_selection.php">Change role</a>
-                    <?php endif; ?>
-                    <br><br>
                     Already have an account? <a href="login_selection.php">Login here</a>
+                    <br><br>
+                    <a href="registration_selection.php" style="font-size: 12px; color: #666;">Change Registration Role</a>
                 </div>
             </form>
         <?php endif; ?>

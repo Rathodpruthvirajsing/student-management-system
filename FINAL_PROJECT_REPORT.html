@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System - Project Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary: #2563eb;
+            --secondary: #475569;
+            --accent: #0ea5e9;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            background: #f8fafc;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        @media print {
+            body { background: white; }
+            .page { margin: 0; box-shadow: none; width: 100%; border: none; }
+            .no-print { display: none; }
+            .page-break { page-break-before: always; }
+        }
+
+        /* Cover Page */
+        .cover {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 250mm;
+        }
+
+        .university-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .department {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 50px;
+        }
+
+        .project-title {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        .project-subtitle {
+            font-size: 20px;
+            color: var(--secondary);
+            margin-bottom: 100px;
+        }
+
+        .student-info {
+            margin-top: 50px;
+            text-align: left;
+            width: 80%;
+            border-top: 2px solid var(--border);
+            padding-top: 20px;
+        }
+
+        /* Content Styles */
+        h1 { font-size: 32px; border-bottom: 3px solid var(--primary); padding-bottom: 10px; margin-top: 40px; }
+        h2 { font-size: 24px; border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-top: 30px; color: var(--primary); }
+        h3 { font-size: 18px; margin-top: 20px; }
+
+        p { margin-bottom: 15px; text-align: justify; }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #f1f5f9;
+        }
+
+        .feature-card strong { color: var(--primary); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th { background: #f8fafc; font-weight: 700; }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #e2e8f0;
+        }
+
+        .badge-success { background: #dcfce7; color: #166534; }
+
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .print-btn:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+    <a href="javascript:window.print()" class="print-btn no-print">
+        <span>🖨️</span> Generate PDF Now
+    </a>
+
+    <!-- PAGE 1: COVER -->
+    <div class="page">
+        <div class="cover">
+            <div class="university-name">PARUL UNIVERSITY</div>
+            <div class="department">Faculty of IT & Computer Science</div>
+            
+            <div style="margin: 60px 0;">
+                <img src="https://itcs.paruluniversity.ac.in/wp-content/uploads/2021/07/parul-logo.png" alt="University Logo" style="width: 150px; filter: grayscale(1);">
+            </div>
+
+            <div class="project-title">STUDENT MANAGEMENT SYSTEM</div>
+            <div class="project-subtitle">Final Semester Project Milestone Report</div>
+
+            <div class="student-info">
+                <p><strong>Program:</strong> Master of Computer Applications (MCA)</p>
+                <p><strong>Semester:</strong> 4</p>
+                <p><strong>Subject:</strong> Software Project Development</p>
+                <p><strong>Submission Date:</strong> March 2026</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: PROJECT PROFILE -->
+    <div class="page page-break">
+        <h1>1. Project Profile</h1>
+        
+        <h2>1.1 Project Definition</h2>
+        <p>The <strong>Student Management System (SMS)</strong> is a comprehensive web-based platform designed to streamline and automate the administrative and academic operations of educational institutions. It facilitates seamless interaction between four core stakeholders: Administrators, Teachers, Students, and Parents.</p>
+
+        <h2>1.2 Need for the System</h2>
+        <p>Traditional academic management often suffers from data silos, manual entry errors, and poor communication between the institution and parents. This system addresses these by providing:</p>
+        <ul>
+            <li><strong>Centralized Data:</strong> A single source of truth for all academic records.</li>
+            <li><strong>Transparency:</strong> Real-time access for parents to monitor child performance.</li>
+            <li><strong>Efficiency:</strong> Automated attendance and result generation for teachers.</li>
+            <li><strong>Accessibility:</strong> A responsive interface accessible via any web-enabled device.</li>
+        </ul>
+
+        <h2>1.3 Technology Stack</h2>
+        <table>
+            <tr><th>Component</th><th>Technology</th></tr>
+            <tr><td>Frontend</td><td>HTML5, CSS3 (Modern Vanilla), JavaScript</td></tr>
+            <tr><td>Backend</td><td>PHP 8.2 (Secure Procedural Logic)</td></tr>
+            <tr><td>Database</td><td>MySQL 8.0 / MariaDB</td></tr>
+            <tr><td>Architecture</td><td>Modular include-based structure</td></tr>
+            <tr><td>Security</td><td>BCRYPT Hashing, Role-Based Access Control (RBAC)</td></tr>
+        </table>
+    </div>
+
+    <!-- PAGE 3: WORKING FLOW & ROLES -->
+    <div class="page page-break">
+        <h1>2. Working Flow & Role Analysis</h1>
+        
+        <p>The system operates on a strictly governed Role-Based Access Control (RBAC) model. Each user is assigned one of four roles, determining their interaction with the system modules.</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <strong>🛠️ Administrator</strong>
+                <p>Manages users, courses, and financial records. Oversees system-wide analytics and enrollment cycles.</p>
+            </div>
+            <div class="feature-card">
+                <strong>👨‍🏫 Teacher</strong>
+                <p>Handles daily attendance, exam mark entry, and assignment distribution. Communicates with students via chat.</p>
+            </div>
+            <div class="feature-card">
+                <strong>👨‍🎓 Student</strong>
+                <p>Accesses attendance history, exam results, and class schedules. Tracks personal fee status and updates profile.</p>
+            </div>
+            <div class="feature-card">
+                <strong>👪 Parent</strong>
+                <p>Specialized dashboard to monitor child's academic health, verify attendance, and ensure fee compliance.</p>
+            </div>
+        </div>
+
+        <h2>2.1 Core Modules</h2>
+        <ul>
+            <li><strong>Enrollment:</strong> Secure registration process for all roles.</li>
+            <li><strong>Academic Tracker:</strong> Management of subjects, courses, and timetables.</li>
+            <li><strong>Performance Center:</strong> Exam scheduling and marks management.</li>
+            <li><strong>Financial Suite:</strong> Fee payment tracking and history.</li>
+            <li><strong>Interaction Hub:</strong> Internal messaging system for academic support.</li>
+        </ul>
+    </div>
+
+    <!-- PAGE 4: SYSTEM DESIGN & DATABASE -->
+    <div class="page page-break">
+        <h1>3. System Design</h1>
+
+        <h2>3.1 Database Schema (Simplified)</h2>
+        <table>
+            <tr><th>Table</th><th>Primary Columns</th><th>Relationships</th></tr>
+            <tr><td>users</td><td>id, email, password, role</td><td>Core Auth Table</td></tr>
+            <tr><td>students</td><td>id, enrollment_no, course_id</td><td>Linked to users & courses</td></tr>
+            <tr><td>teachers</td><td>id, name, course_id</td><td>Linked to users & courses</td></tr>
+            <tr><td>attendance</td><td>id, student_id, status, date</td><td>Linked to students</td></tr>
+            <tr><td>marks</td><td>id, student_id, marks_obtained</td><td>Linked to students & exams</td></tr>
+            <tr><td>fee_payments</td><td>id, student_id, amount</td><td>Linked to students</td></tr>
+        </table>
+
+        <h2>3.2 Implementation Strategy</h2>
+        <p>The project follows a modular structure where common elements (navigation, styling, database connection) are centralized in the <code>includes/</code> and <code>config/</code> directories. This ensures high maintainability and consistent user experience across different portals.</p>
+    </div>
+
+    <!-- PAGE 5: TESTING & VERIFICATION -->
+    <div class="page page-break">
+        <h1>4. Testing & Verification</h1>
+        
+        <p>Comprehensive testing was conducted to ensure system reliability across all role-based dashboards.</p>
+
+        <table>
+            <tr><th>Module</th><th>Test Description</th><th>Result</th></tr>
+            <tr><td>Authentication</td><td>Multi-role login and session protection</td><td><span class="badge badge-success">PASSED</span></td></tr>
+            <tr><td>Attendance</td><td>Marking and cross-role visualization</td><td><span class="badge badge-success">PASSED</span></td></tr>
+            <tr><td>Fee tracking</td><td>Payment entry and balance calculation</td><td><span class="badge badge-success">PASSED</span></td></tr>
+            <tr><td>Exam Results</td><td>Mark entry by teacher and student view</td><td><span class="badge badge-success">PASSED</span></td></tr>
+            <tr><td>Responsive UI</td><td>Layout stability on mobile orientations</td><td><span class="badge badge-success">PASSED</span></td></tr>
+        </table>
+
+        <div style="margin-top: 100px; text-align: center; font-style: italic;">
+            <p>End of Document</p>
+            <p style="font-size: 12px; color: var(--text-light);">Generated by Antigravity AI Implementation System</p>
+        </div>
+    </div>
+
+</body>
+</html>
